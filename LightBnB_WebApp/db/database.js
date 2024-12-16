@@ -179,9 +179,9 @@ const getAllReservations = (guest_id, limit = 10) => {
 
 // Refactoring function to include filtering
 const getAllProperties = function (options, limit = 10) {
-  // 1
+  // 1 Array to hold parameters for the query
   const queryParams = [];
-  // 2
+  // 2 Start query with all information that comes before WHERE clause
   let queryString = `
   SELECT properties.*, avg(property_reviews.rating) as average_rating
   FROM properties
@@ -194,7 +194,16 @@ const getAllProperties = function (options, limit = 10) {
     queryString += `WHERE city LIKE $${queryParams.length} `;
   }
 
-  // 4 LIMIT CLAUSE
+  // Filter properties belonging to the owner
+
+  // Filter Min price per night
+
+  // Filter max price per night
+
+  // Filter minimum rating
+
+  // 4 Group by property ID, order by cost per night, and LIMIT CLAUSE
+  // Add any query that comes after the WHERE clause
   queryParams.push(limit);
   queryString += `
   GROUP BY properties.id
@@ -205,7 +214,7 @@ const getAllProperties = function (options, limit = 10) {
   // 5
   console.log(queryString, queryParams);
 
-  // 6
+  // 6 Run the query
   return pool.query(queryString, queryParams).then((res) => res.rows);
 };
 
