@@ -36,14 +36,14 @@ const pool = new Pool({
 // };
 
 // Refactoring getUsersWithEmail
-const getUserWithEmail = email => {
+const getUserWithEmail = (email) => {
   return pool
-    .query(`SELECT * FROM users WHERE email LIMIT $1`, [email])
-    .then(result => {
-      console.log(result.rows);
+    .query(`SELECT * FROM users WHERE email = $1`, [email])
+    .then((result) => {
+      // console.log(result.rows);
       return result.rows[0];
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err.message);
     });
 };
@@ -59,14 +59,14 @@ const getUserWithEmail = email => {
 // };
 
 // Refactoring getUsersWithId
-const getUserWithId = id => {
+const getUserWithId = (id) => {
   return pool
-    .query(`SELECT * FROM users WHERE id LIMIT $1`, [id])
-    .then(result => {
-      console.log(result.rows);
+    .query(`SELECT * FROM users WHERE id = $1`, [id])
+    .then((result) => {
+      // console.log(result.rows);
       return result.rows[0];
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err.message);
     });
 };
@@ -84,7 +84,7 @@ const getUserWithId = id => {
 //   return Promise.resolve(user);
 // };
 
-const addUser = user => {
+const addUser = (user) => {
   return pool
     .query(
       `INSERT INTO users (name, email, password)
@@ -92,11 +92,11 @@ const addUser = user => {
       RETURNING *`,
       [user.name, user.email, user.password]
     )
-    .then(result => {
-      console.log(result.rows);
-      return result.rows;
+    .then((result) => {
+      // console.log(result.rows);
+      return result.rows[0];
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err.message);
     });
 };
@@ -133,11 +133,11 @@ const getAllReservations = function (guest_id, limit = 10) {
 const getAllProperties = (options, limit = 10) => {
   return pool
     .query(`SELECT * FROM properties LIMIT $1`, [limit])
-    .then(result => {
-      console.log(result.rows);
+    .then((result) => {
+      // console.log(result.rows);
       return result.rows;
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err.message);
     });
 };
