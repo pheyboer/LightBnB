@@ -195,12 +195,28 @@ const getAllProperties = function (options, limit = 10) {
   }
 
   // Filter properties belonging to the owner
+  if (options.owner_id) {
+    queryParams.push(options.owner_id);
+    queryString += `properties.owner_id = $${queryParams.length} `;
+  }
 
   // Filter Min price per night
+  if (options.minimum_price_per_night) {
+    queryParams.push(options.minimum_price_per_night * 100);
+    queryString += `cost_per_night >= $${queryParams.length} `;
+  }
 
   // Filter max price per night
+  if (options.maximum_price_per_night) {
+    queryParams.push(options.maximum_price_per_night * 100);
+    queryString += `cost_per_night <= $${queryParams.length} `;
+  }
 
   // Filter minimum rating
+  if (options.minimum_rating) {
+    queryParams.push(options.minimum_rating);
+    queryString += `avg(property_reviews.rating) >= $${queryParams.length} `;
+  }
 
   // 4 Group by property ID, order by cost per night, and LIMIT CLAUSE
   // Add any query that comes after the WHERE clause
