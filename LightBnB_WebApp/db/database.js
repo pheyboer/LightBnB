@@ -188,6 +188,9 @@ const getAllProperties = function (options, limit = 10) {
   JOIN property_reviews ON properties.id = property_id
   `;
 
+  // Implementing WHERE 1-1 Clause
+  const whereClause = [];
+
   // 3 Filtering by city
   if (options.city) {
     queryParams.push(`%${options.city}%`);
@@ -216,6 +219,11 @@ const getAllProperties = function (options, limit = 10) {
   if (options.minimum_rating) {
     queryParams.push(options.minimum_rating);
     queryString += `avg(property_reviews.rating) >= $${queryParams.length} `;
+  }
+
+  // WHERE clause for added conditions
+  if (whereClause.length > 0) {
+    queryString += ' WHERE ' + whereClause.join(' AND ');
   }
 
   // 4 Group by property ID, order by cost per night, and LIMIT CLAUSE
