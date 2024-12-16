@@ -155,16 +155,58 @@ const getAllReservations = (guest_id, limit = 10) => {
 // };
 
 // Refactoring getAllProperties to use data from lightbnb databse with parameterized query
-const getAllProperties = (options, limit = 10) => {
-  return pool
-    .query(`SELECT * FROM properties LIMIT $1`, [limit])
-    .then((result) => {
-      // console.log(result.rows);
-      return result.rows;
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
+// const getAllProperties = (options, limit = 10) => {
+//   return pool
+//     .query(
+//       `SELECT properties.id, title, cost_per_night, avg(property_reviews.rating) as average_rating
+//       FROM properties
+//       LEFT JOIN property_reviews ON properties.id = property_id
+//       WHERE city LIKE $1
+//       GROUP BY properties.id
+//       HAVING avg(property_reviews.rating) >= 4
+//       ORDER BY cost_per_night
+//       LIMIT $2;`,
+//       [options, limit]
+//     )
+//     .then((result) => {
+//       // console.log(result.rows);
+//       return result.rows;
+//     })
+//     .catch((err) => {
+//       console.log(err.message);
+//     });
+// };
+
+// Refactoring function to include filtering
+const getAllProperties = function (options, limit = 10) {
+  // 1
+  const queryParams = [];
+  // 2
+  let queryString = `
+  SELECT properties.*, avg(property_reviews.rating) as average_rating
+  FROM properties
+  JOIN property_reviews ON properties.id = property_id
+  `;
+
+  // 3 Filtering by city
+  if (options.city) {
+    queryParams.push(`%${options.city}%`);
+    queryString += `WHERE city LIKE $${queryParams.length} `;
+  }
+
+  // 4 LIMIT CLAUSE
+  queryParams.push(limit);
+  queryString += `
+  GROUP BY properties.id
+  ORDER BY cost_per_night
+  LIMIT $${queryParams.length};
+  `;
+
+  // 5
+  console.log(queryString, queryParams);
+
+  // 6
+  return pool.query(queryString, queryParams).then((res) => res.rows);
 };
 
 /**
