@@ -194,31 +194,31 @@ const getAllProperties = function (options, limit = 10) {
   // 3 Filtering by city
   if (options.city) {
     queryParams.push(`%${options.city}%`);
-    queryString += `city LIKE $${queryParams.length} `;
+    whereClause.push(`city LIKE $${queryParams.length} `);
   }
 
   // Filter properties belonging to the owner
   if (options.owner_id) {
     queryParams.push(options.owner_id);
-    queryString += `properties.owner_id = $${queryParams.length} `;
+    whereClause.push(`properties.owner_id = $${queryParams.length} `);
   }
 
   // Filter Min price per night
   if (options.minimum_price_per_night) {
     queryParams.push(options.minimum_price_per_night * 100);
-    queryString += `cost_per_night >= $${queryParams.length} `;
+    whereClause.push(`cost_per_night >= $${queryParams.length} `);
   }
 
   // Filter max price per night
   if (options.maximum_price_per_night) {
     queryParams.push(options.maximum_price_per_night * 100);
-    queryString += `cost_per_night <= $${queryParams.length} `;
+    whereClause.push(`cost_per_night <= $${queryParams.length} `);
   }
 
   // Filter minimum rating
   if (options.minimum_rating) {
     queryParams.push(options.minimum_rating);
-    queryString += `avg(property_reviews.rating) >= $${queryParams.length} `;
+    whereClause.push(`avg(property_reviews.rating) >= $${queryParams.length} `);
   }
 
   // WHERE clause for added conditions
