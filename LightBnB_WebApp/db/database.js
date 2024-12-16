@@ -194,7 +194,7 @@ const getAllProperties = function (options, limit = 10) {
   // 3 Filtering by city
   if (options.city) {
     queryParams.push(`%${options.city}%`);
-    queryString += `WHERE city LIKE $${queryParams.length} `;
+    queryString += `city LIKE $${queryParams.length} `;
   }
 
   // Filter properties belonging to the owner
