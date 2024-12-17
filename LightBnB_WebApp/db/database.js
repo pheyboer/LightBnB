@@ -10,12 +10,6 @@ const pool = new Pool({
   port: 5432,
 });
 
-// the following assumes that you named your connection variable `pool` TO TEST CONNECTION
-//remove this before submitting but test every time
-// pool.query(`SELECT title FROM properties LIMIT 10;`).then(response => {
-//   console.log(response);
-// });
-
 /// Users
 
 /**
@@ -23,28 +17,15 @@ const pool = new Pool({
  * @param {String} email The email of the user.
  * @return {Promise<{}>} A promise to the user.
  */
-// Original Code
-// const getUserWithEmail = function (email) {
-//   let resolvedUser = null;
-//   for (const userId in users) {
-//     const user = users[userId];
-//     if (user && user.email.toLowerCase() === email.toLowerCase()) {
-//       resolvedUser = user;
-//     }
-//   }
-//   return Promise.resolve(resolvedUser);
-// };
-
-// Refactoring getUsersWithEmail
+// Refactored getUsersWithEmail
 const getUserWithEmail = (email) => {
   return pool
     .query(`SELECT * FROM users WHERE email = $1`, [email])
     .then((result) => {
-      // console.log(result.rows);
       return result.rows[0];
     })
     .catch((err) => {
-      console.log(err.message);
+      console.log('Error with Email', err.message);
     });
 };
 
@@ -53,21 +34,16 @@ const getUserWithEmail = (email) => {
  * @param {string} id The id of the user.
  * @return {Promise<{}>} A promise to the user.
  */
-// Original Code
-// const getUserWithId = function (id) {
-//   return Promise.resolve(users[id]);
-// };
 
-// Refactoring getUsersWithId
+// Refactored getUsersWithId
 const getUserWithId = (id) => {
   return pool
     .query(`SELECT * FROM users WHERE id = $1`, [id])
     .then((result) => {
-      // console.log(result.rows);
       return result.rows[0];
     })
     .catch((err) => {
-      console.log(err.message);
+      console.log('Error with ID', err.message);
     });
 };
 
@@ -76,13 +52,6 @@ const getUserWithId = (id) => {
  * @param {{name: string, password: string, email: string}} user
  * @return {Promise<{}>} A promise to the user.
  */
-// Original Code
-// const addUser = function (user) {
-//   const userId = Object.keys(users).length + 1;
-//   user.id = userId;
-//   users[userId] = user;
-//   return Promise.resolve(user);
-// };
 
 // Refactored code
 const addUser = (user) => {
@@ -94,7 +63,6 @@ const addUser = (user) => {
       [user.name, user.email, user.password]
     )
     .then((result) => {
-      // console.log(result.rows);
       return result.rows[0];
     })
     .catch((err) => {
@@ -109,10 +77,6 @@ const addUser = (user) => {
  * @param {string} guest_id The id of the user.
  * @return {Promise<[{}]>} A promise to the reservations.
  */
-// Original Code
-// const getAllReservations = function (guest_id, limit = 10) {
-//   return getAllProperties(null, 2);
-// };
 
 // Refactored Code
 const getAllReservations = (guest_id, limit = 10) => {
@@ -129,11 +93,10 @@ const getAllReservations = (guest_id, limit = 10) => {
       [guest_id, limit]
     )
     .then((result) => {
-      // console.log(result.rows);
       return result.rows;
     })
     .catch((err) => {
-      console.log(err.message);
+      console.log('Error with Reservation', err.message);
     });
 };
 
@@ -145,39 +108,8 @@ const getAllReservations = (guest_id, limit = 10) => {
  * @param {*} limit The number of results to return.
  * @return {Promise<[{}]>}  A promise to the properties.
  */
-///////////// Original code
-// const getAllProperties = function (options, limit = 10) {
-//   const limitedProperties = {};
-//   for (let i = 1; i <= limit; i++) {
-//     limitedProperties[i] = properties[i];
-//   }
-//   return Promise.resolve(limitedProperties);
-// };
 
-// Refactoring getAllProperties to use data from lightbnb databse with parameterized query
-// const getAllProperties = (options, limit = 10) => {
-//   return pool
-//     .query(
-//       `SELECT properties.id, title, cost_per_night, avg(property_reviews.rating) as average_rating
-//       FROM properties
-//       LEFT JOIN property_reviews ON properties.id = property_id
-//       WHERE city LIKE $1
-//       GROUP BY properties.id
-//       HAVING avg(property_reviews.rating) >= 4
-//       ORDER BY cost_per_night
-//       LIMIT $2;`,
-//       [options, limit]
-//     )
-//     .then((result) => {
-//       // console.log(result.rows);
-//       return result.rows;
-//     })
-//     .catch((err) => {
-//       console.log(err.message);
-//     });
-// };
-
-// Refactoring function to include filtering
+// Refactored function to include filtering
 const getAllProperties = function (options, limit = 10) {
   // 1 Array to hold parameters for the query
   const queryParams = [];
@@ -247,13 +179,6 @@ const getAllProperties = function (options, limit = 10) {
  * @param {{}} property An object containing all of the property details.
  * @return {Promise<{}>} A promise to the property.
  */
-// Original Code
-// const addProperty = function (property) {
-//   const propertyId = Object.keys(properties).length + 1;
-//   property.id = propertyId;
-//   properties[propertyId] = property;
-//   return Promise.resolve(property);
-// };
 
 // Refactored Code
 const addProperty = function (property) {
