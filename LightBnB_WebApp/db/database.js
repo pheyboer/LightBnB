@@ -289,7 +289,10 @@ const addProperty = function (property) {
 
   return pool
     .query(addPropertyQueryString, addPropertyQueryParams)
-    .then((res) => res.rows[0]);
+    .then((res) => res.rows[0])
+    .catch((err) => {
+      console.log('Error Adding Property', err.message);
+    });
 };
 
 module.exports = {
