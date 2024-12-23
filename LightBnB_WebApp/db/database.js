@@ -53,7 +53,7 @@ const getUserWithId = (id) => {
  * @return {Promise<{}>} A promise to the user.
  */
 
-// Refactored code
+// Refactored addUser
 const addUser = (user) => {
   return pool
     .query(
@@ -78,7 +78,7 @@ const addUser = (user) => {
  * @return {Promise<[{}]>} A promise to the reservations.
  */
 
-// Refactored Code
+// Refactored getAllReservations
 const getAllReservations = (guest_id, limit = 10) => {
   return pool
     .query(
